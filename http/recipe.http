@@ -1,0 +1,29 @@
+#POST http://localhost:8080/api/recipe/create
+#Content-Type: application/json
+#
+#{
+#  "name" : "김밥",
+#  "description" : "꿀"
+#}
+
+###
+
+#GET http://localhost:8080/api/recipe/read/1
+
+###
+
+#PUT http://localhost:8080/api/recipe/update/1
+#Content-Type: application/json
+#
+#{
+#  "name" : "밥",
+#  "description" : "꿀?"
+#}
+
+###
+
+#GET http://localhost:8080/api/recipe/read/1
+
+###
+
+#GET http://localhost:8080/api/recipe/read/6
