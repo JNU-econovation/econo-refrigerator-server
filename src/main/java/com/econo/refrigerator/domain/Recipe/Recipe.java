@@ -49,4 +49,12 @@ public class Recipe {
         if (recipeSaveDto.getDescription() != null)
             this.description = recipeSaveDto.getDescription();
     }
+
+    public void appendIngredient(RecipeIngredient ingredient) {
+        ingredients.add(ingredient);
+    }
+
+    public void subtractIngredien(RecipeIngredient ingredient) {
+        ingredients.remove(ingredient);
+    }
 }
