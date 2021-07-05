@@ -1,6 +1,6 @@
 package com.econo.refrigerator.domain.Recipe;
 
-import com.econo.refrigerator.web.dto.RecipeSaveDto;
+import com.econo.refrigerator.web.dto.RecipeDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -36,18 +36,21 @@ public class Recipe {
 
     // cook method picture array
 
+    private Integer gradeCount = 0;
+
+    private Float averageGrade = 0.0f;
+
     @Builder
-    public Recipe(String name, String description) {
+    public Recipe(String name, String description, String cookingDescription) {
         this.name = name;
         this.description = description;
+        this.cookingDescription = cookingDescription;
     }
 
-    public void update(RecipeSaveDto recipeSaveDto) {
-        if (recipeSaveDto.getName() != null)
-            this.name = recipeSaveDto.getName();
-
-        if (recipeSaveDto.getDescription() != null)
-            this.description = recipeSaveDto.getDescription();
+    public void update(RecipeDto recipeDto) {
+        this.name = recipeDto.getName();
+        this.description = recipeDto.getDescription();
+        this.cookingDescription = recipeDto.getCookingDescription();
     }
 
     public void appendIngredient(RecipeIngredient ingredient) {
@@ -56,5 +59,12 @@ public class Recipe {
 
     public void subtractIngredien(RecipeIngredient ingredient) {
         ingredients.remove(ingredient);
+    }
+
+    public void calculateAverageGrade(Integer newGrade) {
+        Float sumOfGrade = averageGrade * gradeCount;
+
+        gradeCount++;
+        averageGrade = (sumOfGrade + newGrade) / gradeCount;
     }
 }

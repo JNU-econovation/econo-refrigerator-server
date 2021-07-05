@@ -3,7 +3,7 @@ package com.econo.refrigerator.web;
 import com.econo.refrigerator.domain.Recipe.Recipe;
 import com.econo.refrigerator.domain.Recipe.RecipeIngredient;
 import com.econo.refrigerator.service.RecipeService;
-import com.econo.refrigerator.web.dto.RecipeSaveDto;
+import com.econo.refrigerator.web.dto.RecipeDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,13 +16,13 @@ public class RecipeApiController {
     private final RecipeService recipeService;
 
     @PostMapping("/api/recipe")
-    public Long create(@RequestBody RecipeSaveDto recipeSaveDto) {
-        return recipeService.create(recipeSaveDto);
+    public Long create(@RequestBody RecipeDto recipeDto) {
+        return recipeService.create(recipeDto);
     }
 
     @PutMapping("/api/recipe/{id}")
-    public Long update(@PathVariable Long id, @RequestBody RecipeSaveDto recipeSaveDto) {
-        return recipeService.update(id, recipeSaveDto);
+    public Long update(@PathVariable Long id, @RequestBody RecipeDto recipeDto) {
+        return recipeService.update(id, recipeDto);
     }
 
     @GetMapping("/api/recipe/{id}")
@@ -59,4 +59,10 @@ public class RecipeApiController {
     public void subtractIngredient(@PathVariable Long id, @PathVariable String ingredient) {
         recipeService.subtractIngredient(id, ingredient);
     }
+
+    @PutMapping("/api/recipe/{id}/grade/{grade}")
+    public Float rateGradeAndGetAverageGrade(@PathVariable Long id, @PathVariable Integer grade) {
+        return recipeService.rateGradeAndGetAverageGrade(id, grade);
+    }
+
 }

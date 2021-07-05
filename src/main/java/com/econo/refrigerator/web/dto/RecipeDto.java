@@ -7,21 +7,24 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class RecipeSaveDto {
+public class RecipeDto {
 
     private String name;
     private String description;
+    private String cookingDescription;
 
     @Builder
-    public RecipeSaveDto (String name, String description) {
+    public RecipeDto(String name, String description, String cookingDescription) {
         this.name = name;
         this.description = description;
+        this.cookingDescription = cookingDescription;
     }
 
     public Recipe toEntity() {
         return Recipe.builder()
                 .name(name)
                 .description(description)
+                .cookingDescription(cookingDescription)
                 .build();
     }
 }
