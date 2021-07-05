@@ -15,22 +15,22 @@ public class RecipeApiController {
 
     private final RecipeService recipeService;
 
-    @PostMapping("/api/recipe/create")
+    @PostMapping("/api/recipe")
     public Long create(@RequestBody RecipeSaveDto recipeSaveDto) {
         return recipeService.create(recipeSaveDto);
     }
 
-    @PutMapping("/api/recipe/update/{id}")
+    @PutMapping("/api/recipe/{id}")
     public Long update(@PathVariable Long id, @RequestBody RecipeSaveDto recipeSaveDto) {
         return recipeService.update(id, recipeSaveDto);
     }
 
-    @GetMapping("/api/recipe/read/{id}")
+    @GetMapping("/api/recipe/{id}")
     public Recipe read(@PathVariable Long id) {
         return recipeService.read(id);
     }
 
-    @DeleteMapping("/api/recipe/delete/{id}")
+    @DeleteMapping("/api/recipe/{id}")
     public void delete(@PathVariable Long id) {
         recipeService.delete(id);
     }
