@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @NoArgsConstructor
 @Getter
@@ -21,9 +23,16 @@ public class Recipe {
 
     private String description;
 
-    // ingredients array
+    @ManyToMany
+    @JoinTable(
+            name = "recipe_ingredient_relation",
+            joinColumns = @JoinColumn(name = "recipe_id"),
+            inverseJoinColumns = @JoinColumn(name = "recipe_ingredient_id")
+    )
+    private List<RecipeIngredient> ingredients = new ArrayList<>();
 
-    // cook method description array
+    // cooking method description
+    private String cookingDescription;
 
     // cook method picture array
 
@@ -36,6 +45,7 @@ public class Recipe {
     public void update(RecipeSaveDto recipeSaveDto) {
         if (recipeSaveDto.getName() != null)
             this.name = recipeSaveDto.getName();
+
         if (recipeSaveDto.getDescription() != null)
             this.description = recipeSaveDto.getDescription();
     }
