@@ -23,7 +23,6 @@ public class RecipeService {
 
         List<RecipeIngredientDto> recipeIngredientDtos = recipeDto.getIngredients();
         for (RecipeIngredientDto recipeIngredientDto : recipeIngredientDtos) {
-            System.out.println("@@@@@@@" + recipeIngredientDto.getIngredient().name());
             recipePropertyService.appendIngredient(recipe, recipeIngredientDto.getIngredient());
         }
 

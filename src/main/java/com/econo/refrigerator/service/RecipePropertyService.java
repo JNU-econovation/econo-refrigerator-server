@@ -34,7 +34,6 @@ public class RecipePropertyService {
         Recipe recipe = recipeRepository.findById(recipeId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 레시피가 없습니다. id = " + recipeId));
         RecipeIngredient recipeIngredient = recipeIngreidentRepository.findByIngredient(ingredient);
-        System.out.println("@@@@@@@" + recipeIngredient.getIngredient().name());
 
         recipe.appendIngredient(recipeIngredient);
     }
@@ -42,8 +41,7 @@ public class RecipePropertyService {
     @Transactional
     public void appendIngredient(Recipe recipe, Ingredient ingredient) {
         RecipeIngredient recipeIngredient = recipeIngreidentRepository.findByIngredient(ingredient);
-        recipeIngredient.appendRecipe(recipe);
-        //recipe.appendIngredient(recipeIngredient);
+        recipe.appendIngredient(recipeIngredient);
     }
 
     @Transactional
