@@ -26,4 +26,6 @@ public class RecipeIngredient {
 
     @Builder
     public RecipeIngredient(Ingredient ingredient) { this.ingredient = ingredient; }
+
+    public void appendRecipe(Recipe recipe) { this.recipes.add(recipe); }
 }

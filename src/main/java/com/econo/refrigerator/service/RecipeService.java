@@ -2,6 +2,8 @@ package com.econo.refrigerator.service;
 
 import com.econo.refrigerator.domain.Recipe.*;
 import com.econo.refrigerator.web.dto.RecipeDto;
+import com.econo.refrigerator.web.dto.RecipeIngredientDto;
+import com.econo.refrigerator.web.dto.StepDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,51 +15,43 @@ import java.util.List;
 public class RecipeService {
 
     private final RecipeRepository recipeRepository;
-    private final RecipeIngreidentRepository recipeIngreidentRepository;
+    private final RecipePropertyService recipePropertyService;
 
+    @Transactional
     public Long create(RecipeDto recipeDto) {
+        Recipe recipe =  recipeRepository.save(recipeDto.toEntity());
 
+        List<RecipeIngredientDto> recipeIngredientDtos = recipeDto.getIngredients();
+        for (RecipeIngredientDto recipeIngredientDto : recipeIngredientDtos) {
+            System.out.println("@@@@@@@" + recipeIngredientDto.getIngredient().name());
+            recipePropertyService.appendIngredient(recipe, recipeIngredientDto.getIngredient());
+        }
 
-        return recipeRepository.save(recipeDto.toEntity()).getId();
+        List<StepDto> stepDtos = recipeDto.getSteps();
+        for (StepDto stepDto : stepDtos) {
+            recipePropertyService.createStep(recipe, stepDto);
+        }
+
+        return recipe.getId();
     }
 
     @Transactional
-    public Long update(Long id, RecipeDto recipeDto) {
-        Recipe targetRecipe = read(id);
+    public Long update(Long recipeId, RecipeDto recipeDto) {
+        Recipe targetRecipe = read(recipeId);
         targetRecipe.update(recipeDto);
 
-        return id;
+        return recipeId;
     }
 
-    public Recipe read(Long id) throws IllegalArgumentException {
-        return recipeRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("해당 레시피가 없습니다. id = " + id));
+    public Recipe read(Long recipeId) throws IllegalArgumentException {
+        return recipeRepository.findById(recipeId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 레시피가 없습니다. id = " + recipeId));
     }
 
-    public void delete(Long id) throws IllegalArgumentException {
-        Recipe targetRecipe = recipeRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("해당 레시피가 없습니다. id = " + id));
+    public void delete(Long recipeId) throws IllegalArgumentException {
+        Recipe targetRecipe = recipeRepository.findById(recipeId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 레시피가 없습니다. id = " + recipeId));
         recipeRepository.delete(targetRecipe);
-    }
-
-    public List<RecipeIngredient> getIngredientList() {
-        return recipeIngreidentRepository.findAll();
-    }
-
-    public void appendIngredient(Long recipeId, Integer ingredientId) throws IllegalArgumentException {
-        Recipe recipe = recipeRepository.findById(recipeId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 레시피가 없습니다. id = " + recipeId));
-        RecipeIngredient recipeIngredient = recipeIngreidentRepository.findByIngredient(Ingredient.values()[ingredientId]);
-
-        recipe.appendIngredient(recipeIngredient);
-    }
-
-    public void subtractIngredient(Long recipeId, Integer ingredientId) throws IllegalArgumentException {
-        Recipe recipe = recipeRepository.findById(recipeId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 레시피가 없습니다. id = " + recipeId));
-        RecipeIngredient recipeIngredient = recipeIngreidentRepository.findByIngredient(Ingredient.values()[ingredientId]);
-
-        recipe.subtractIngredien(recipeIngredient);
     }
 
     @Transactional

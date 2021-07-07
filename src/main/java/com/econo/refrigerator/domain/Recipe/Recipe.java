@@ -65,6 +65,10 @@ public class Recipe {
         ingredients.remove(ingredient);
     }
 
+    public void appendStep(Step step) { steps.add(step); }
+
+    public void subtractStep(Step step) { steps.remove(step); }
+
     public void rateLike() {
         likeCount++;
     }

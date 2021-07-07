@@ -1,13 +1,11 @@
 package com.econo.refrigerator.web;
 
 import com.econo.refrigerator.domain.Recipe.Recipe;
-import com.econo.refrigerator.domain.Recipe.RecipeIngredient;
 import com.econo.refrigerator.service.RecipeService;
 import com.econo.refrigerator.web.dto.RecipeDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -20,34 +18,19 @@ public class RecipeApiController {
         return recipeService.create(recipeDto);
     }
 
-    @PutMapping("/api/recipe/{id}")
-    public Long update(@PathVariable Long id, @RequestBody RecipeDto recipeDto) {
-        return recipeService.update(id, recipeDto);
+    @PutMapping("/api/recipe/{recipeId}")
+    public Long update(@PathVariable Long recipeId, @RequestBody RecipeDto recipeDto) {
+        return recipeService.update(recipeId, recipeDto);
     }
 
-    @GetMapping("/api/recipe/{id}")
-    public Recipe read(@PathVariable Long id) {
-        return recipeService.read(id);
+    @GetMapping("/api/recipe/{recipeId}")
+    public Recipe read(@PathVariable Long recipeId) {
+        return recipeService.read(recipeId);
     }
 
-    @DeleteMapping("/api/recipe/{id}")
-    public void delete(@PathVariable Long id) {
-        recipeService.delete(id);
-    }
-
-    @GetMapping("/api/recipe/ingredient")
-    public List<RecipeIngredient> getIngredientList() {
-        return recipeService.getIngredientList();
-    }
-
-    @PutMapping("/api/recipe/{recipeId}/ingredient/{ingredientId}")
-    public void appendIngredient(@PathVariable Long recipeId, @PathVariable Integer ingredientId) {
-        recipeService.appendIngredient(recipeId, ingredientId);
-    }
-
-    @DeleteMapping("/api/recipe/{recipeId}/ingredient/{ingredientId}")
-    public void subtractIngredient(@PathVariable Long recipeId, @PathVariable Integer ingredientId) {
-        recipeService.subtractIngredient(recipeId, ingredientId);
+    @DeleteMapping("/api/recipe/{recipeId}")
+    public void delete(@PathVariable Long recipeId) {
+        recipeService.delete(recipeId);
     }
 
     @PutMapping("/api/recipe/{recipeId}/like")

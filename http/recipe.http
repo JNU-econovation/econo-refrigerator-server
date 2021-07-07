@@ -1,3 +1,21 @@
+POST http://localhost:8080/api/Ingredient
+Content-Type: application/json
+
+{
+  "ingredient" : 0
+}
+
+###
+
+POST http://localhost:8080/api/Ingredient
+Content-Type: application/json
+
+{
+  "ingredient" : 1
+}
+
+###
+
 POST http://localhost:8080/api/recipe
 Content-Type: application/json
 
