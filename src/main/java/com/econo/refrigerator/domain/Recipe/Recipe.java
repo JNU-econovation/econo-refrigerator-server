@@ -33,10 +33,8 @@ public class Recipe {
     )
     private List<RecipeIngredient> ingredients = new ArrayList<>();
 
-    // cooking method description
-    private String cookingMethod;
-
-    // cook method picture array
+    @OneToMany(mappedBy = "recipe")
+    private List<Step> steps = new ArrayList<>();
 
     private Integer likeCount = 0;
 
@@ -47,16 +45,16 @@ public class Recipe {
     private List<Comment> comments = new ArrayList<>();
 
     @Builder
-    public Recipe(String name, String description, String cookingMethod) {
+    public Recipe(String name, String description) {
         this.name = name;
         this.description = description;
-        this.cookingMethod = cookingMethod;
     }
 
     public void update(RecipeDto recipeDto) {
         this.name = recipeDto.getName();
         this.description = recipeDto.getDescription();
-        this.cookingMethod = recipeDto.getCookingMethod();
+        this.ingredients = recipeDto.getRecipeIngredientEntities();
+        this.steps = recipeDto.getStepEntities();
     }
 
     public void appendIngredient(RecipeIngredient ingredient) {

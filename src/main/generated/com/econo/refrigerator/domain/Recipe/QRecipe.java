@@ -24,8 +24,6 @@ public class QRecipe extends EntityPathBase<Recipe> {
 
     public final ListPath<com.econo.refrigerator.domain.Comment.Comment, com.econo.refrigerator.domain.Comment.QComment> comments = this.<com.econo.refrigerator.domain.Comment.Comment, com.econo.refrigerator.domain.Comment.QComment>createList("comments", com.econo.refrigerator.domain.Comment.Comment.class, com.econo.refrigerator.domain.Comment.QComment.class, PathInits.DIRECT2);
 
-    public final StringPath cookingMethod = createString("cookingMethod");
-
     public final StringPath description = createString("description");
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
@@ -35,6 +33,8 @@ public class QRecipe extends EntityPathBase<Recipe> {
     public final NumberPath<Integer> likeCount = createNumber("likeCount", Integer.class);
 
     public final StringPath name = createString("name");
+
+    public final ListPath<Step, QStep> steps = this.<Step, QStep>createList("steps", Step.class, QStep.class, PathInits.DIRECT2);
 
     public QRecipe(String variable) {
         super(Recipe.class, forVariable(variable));
