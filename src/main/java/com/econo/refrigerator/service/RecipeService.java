@@ -8,7 +8,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -36,8 +38,40 @@ public class RecipeService {
 
     @Transactional
     public Long update(Long recipeId, RecipeDto recipeDto) {
-        Recipe targetRecipe = read(recipeId);
-        targetRecipe.update(recipeDto);
+        Recipe recipe = read(recipeId);
+
+        List<RecipeIngredient> newIngredients = new ArrayList<>();
+        for (RecipeIngredientDto dto : recipeDto.getIngredients()) {
+            RecipeIngredient entity = recipePropertyService.findByIngredient(dto.getIngredient());
+            newIngredients.add(entity);
+        }
+
+        recipe.update(recipeDto, newIngredients);
+
+        // Step Update
+        // Modify as much as the same size
+        List<Step> curSteps = recipe.getSteps();
+        List<StepDto> newSteps = recipeDto.getSteps();
+        int commonIdx = Math.min(curSteps.size(), newSteps.size());
+        for (int i = 0; i < commonIdx; i++) {
+            if (curSteps.get(i).equalsWithDto(newSteps.get(i))) continue;
+
+            curSteps.get(i).update(newSteps.get(i));
+        }
+
+        // Delete or Create as much as different
+        if (curSteps.size() > newSteps.size()) {
+                int removedidx = newSteps.size();
+                for (int i = removedidx; i < curSteps.size(); i++) {
+//                    curSteps.remove(i);
+                    recipePropertyService.deleteStep(curSteps.get(i));
+                }
+        } else {
+            int createdIdx = curSteps.size();
+            for (int i = createdIdx; i < newSteps.size(); i++) {
+                recipePropertyService.createStep(recipe, newSteps.get(i));
+            }
+        }
 
         return recipeId;
     }

@@ -1,0 +1,91 @@
+POST http://localhost:8080/api/Ingredient
+Content-Type: application/json
+
+{
+  "ingredient" : 1
+}
+
+###
+
+POST http://localhost:8080/api/Ingredient
+Content-Type: application/json
+
+{
+  "ingredient" : 2
+}
+
+###
+
+POST http://localhost:8080/api/recipe
+Content-Type: application/json
+
+{
+  "name": "김밥",
+  "description": "꿀",
+  "ingredients": [
+    { "ingredient": 1 },
+    { "ingredient": 2 }
+  ],
+  "steps": [
+    {
+      "description": "1. 김 깔고",
+      "imagePath": "../static/1.png"
+    },
+    {
+      "description": "2. 밥 깔고",
+      "imagePath": "../static/2.png"
+    }
+  ]
+}
+
+###
+
+PUT  http://localhost:8080/api/recipe/1
+Content-Type: application/json
+
+{
+  "name": "김밥",
+  "description": "꿀",
+  "ingredients": [
+    { "ingredient": 2 }
+  ],
+  "steps": [
+    {
+      "description": "2. 밥 깔고",
+      "imagePath": "../static/2.png"
+    }
+  ]
+}
+
+###
+
+PUT  http://localhost:8080/api/recipe/1
+Content-Type: application/json
+
+{
+  "name": "김밥",
+  "description": "꿀",
+  "ingredients": [
+    { "ingredient": 2 },
+    { "ingredient": 1 }
+  ],
+  "steps": [
+    {
+      "description": "2. 밥 깔고",
+      "imagePath": "../static/2.png"
+    },
+    {
+      "description": "3. 싸고",
+      "imagePath": "../static/3.png"
+    },
+    {
+      "description": "4. 끝",
+      "imagePath": "../static/4.png"
+    }
+  ]
+}
+
+###
+
+GET http://localhost:8080/api/recipe/1
+

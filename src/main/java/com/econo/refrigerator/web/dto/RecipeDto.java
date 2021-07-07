@@ -33,22 +33,4 @@ public class RecipeDto {
                 .description(description)
                 .build();
     }
-
-    public List<RecipeIngredient> getRecipeIngredientEntities() {
-        List<RecipeIngredient> entities = new ArrayList<>();
-        for (RecipeIngredientDto dto : ingredients) {
-            entities.add(dto.toEntity());
-        }
-
-        return entities;
-    }
-
-    public List<Step> getStepEntities() {
-        List<Step> entities = new ArrayList<>();
-        for (StepDto dto : steps) {
-            entities.add(dto.toEntity());
-        }
-
-        return entities;
-    }
 }

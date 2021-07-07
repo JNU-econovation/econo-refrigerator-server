@@ -50,24 +50,19 @@ public class Recipe {
         this.description = description;
     }
 
-    public void update(RecipeDto recipeDto) {
+    public void update(RecipeDto recipeDto, List<RecipeIngredient> recipeIngredients) {
         this.name = recipeDto.getName();
         this.description = recipeDto.getDescription();
-        this.ingredients = recipeDto.getRecipeIngredientEntities();
-        this.steps = recipeDto.getStepEntities();
+        this.ingredients = recipeIngredients;
     }
 
     public void appendIngredient(RecipeIngredient ingredient) {
         ingredients.add(ingredient);
     }
 
-    public void subtractIngredien(RecipeIngredient ingredient) {
+    public void subtractIngredient(RecipeIngredient ingredient) {
         ingredients.remove(ingredient);
     }
-
-    public void appendStep(Step step) { steps.add(step); }
-
-    public void subtractStep(Step step) { steps.remove(step); }
 
     public void rateLike() {
         likeCount++;

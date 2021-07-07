@@ -1,5 +1,6 @@
 package com.econo.refrigerator.domain.Recipe;
 
+import com.econo.refrigerator.web.dto.StepDto;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Builder;
 import lombok.Getter;
@@ -26,11 +27,22 @@ public class Step {
     @JsonBackReference
     private Recipe recipe;
 
-
     @Builder
     public Step(String description, String imagePath, Recipe recipe) {
         this.description = description;
         this.imagePath = imagePath;
         this.recipe = recipe;
+    }
+
+    public boolean equalsWithDto(StepDto dto) {
+        if (description.equals(dto.getDescription()) && imagePath.equals(dto.getImagePath()))
+            return true;
+        else
+            return false;
+    }
+
+    public void update(StepDto dto) {
+        this.description = dto.getDescription();
+        this.imagePath = dto.getImagePath();
     }
 }

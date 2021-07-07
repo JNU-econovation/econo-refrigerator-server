@@ -20,6 +20,10 @@ public class RecipePropertyService {
     public Long createIngredient(RecipeIngredientDto recipeIngredientDto) {
         return recipeIngreidentRepository.save(recipeIngredientDto.toEntity()).getId();
     }
+    
+    public RecipeIngredient findByIngredient(Ingredient ingredient) {
+        return recipeIngreidentRepository.findByIngredient(ingredient);
+    }
 
     public List<RecipeIngredient> getIngredientList() {
         return recipeIngreidentRepository.findAll();
@@ -30,36 +34,29 @@ public class RecipePropertyService {
     }
 
     @Transactional
-    public void appendIngredient(Long recipeId, Ingredient ingredient) {
+    public void appendIngredient(Long recipeId, Ingredient ingredient) throws IllegalArgumentException {
         Recipe recipe = recipeRepository.findById(recipeId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 레시피가 없습니다. id = " + recipeId));
-        RecipeIngredient recipeIngredient = recipeIngreidentRepository.findByIngredient(ingredient);
+        RecipeIngredient recipeIngredient = findByIngredient(ingredient);
 
         recipe.appendIngredient(recipeIngredient);
     }
 
     @Transactional
     public void appendIngredient(Recipe recipe, Ingredient ingredient) {
-        RecipeIngredient recipeIngredient = recipeIngreidentRepository.findByIngredient(ingredient);
+        RecipeIngredient recipeIngredient = findByIngredient(ingredient);
         recipe.appendIngredient(recipeIngredient);
     }
 
     @Transactional
-    public void subtractIngredient(Long recipeId, Ingredient ingredient) {
+    public void subtractIngredient(Long recipeId, Ingredient ingredient) throws IllegalArgumentException {
         Recipe recipe = recipeRepository.findById(recipeId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 레시피가 없습니다. id = " + recipeId));
-        RecipeIngredient recipeIngredient = recipeIngreidentRepository.findByIngredient(ingredient);
+        RecipeIngredient recipeIngredient = findByIngredient(ingredient);
 
-        recipe.subtractIngredien(recipeIngredient);
+        recipe.subtractIngredient(recipeIngredient);
     }
 
-    @Transactional
-    public void subtractIngredient(Recipe recipe, Ingredient ingredient) {
-        RecipeIngredient recipeIngredient = recipeIngreidentRepository.findByIngredient(ingredient);
-        recipe.subtractIngredien(recipeIngredient);
-    }
-
-    @Transactional
     // create & append (different with ingredient)
     public Long createStep(Recipe recipe, StepDto stepDto) {
         Step step = Step.builder()
@@ -72,12 +69,8 @@ public class RecipePropertyService {
         return step.getId();
     }
 
-    @Transactional
     // delete & subtract (different with ingredient)
-    public void deleteStep(Long stepId) {
-        Step step = stepRepository.findById(stepId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 요리법이 없습니다. id = " + stepId));
-
+    public void deleteStep(Step step) {
         stepRepository.delete(step);
     }
 }
