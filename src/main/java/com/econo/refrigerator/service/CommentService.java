@@ -11,8 +11,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class CommentService {
 
-    private CommentRepository commentRepository;
-    private RecipeService recipeService;
+    private final CommentRepository commentRepository;
+    private final RecipeService recipeService;
 
     public Long create(Long recipeId, CommentDto commentDto) {
         Recipe recipe = recipeService.read(recipeId);
@@ -26,7 +26,7 @@ public class CommentService {
         return commentRepository.save(commentEntity).getId();
     }
 
-    public void update(Long commentId, Integer password, CommentDto commentDto) throws IllegalArgumentException{
+    public void update(Long commentId, String password, CommentDto commentDto) throws IllegalArgumentException{
         Comment comment = commentRepository.getOne(commentId);
         if (comment.checkPassword(password)) {
             comment.update(commentDto);
@@ -35,7 +35,7 @@ public class CommentService {
         }
     }
 
-    public void delete(Long id, Integer password) throws IllegalArgumentException{
+    public void delete(Long id, String password) throws IllegalArgumentException{
         Comment comment = commentRepository.getOne(id);
         if (comment.checkPassword(password)) {
             commentRepository.delete(comment);

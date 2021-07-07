@@ -25,7 +25,7 @@ public class Comment {
     private String content;
 
     @Column(nullable = false)
-    private Integer password;
+    private String password;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonBackReference
@@ -33,7 +33,7 @@ public class Comment {
 
 
     @Builder
-    public Comment(String author, String content, Integer password, Recipe recipe) {
+    public Comment(String author, String content, String password, Recipe recipe) {
         this.author = author;
         this.content = content;
         this.password = password;
@@ -46,7 +46,7 @@ public class Comment {
         this.content = commentDto.getContent();
     }
 
-    public boolean checkPassword(Integer password) {
-        return this.password == password;
+    public boolean checkPassword(String password) {
+        return this.password.equals(password);
     }
 }

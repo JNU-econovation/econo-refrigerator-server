@@ -9,11 +9,11 @@ public class CommentDto {
 
     private String author;
     private String content;
-    private Integer password;
+    private String password;
 
 
     @Builder
-    public CommentDto(String author, String content, Integer password) {
+    public CommentDto(String author, String content, String password) {
         this.author = author;
         this.content = content;
         this.password = password;

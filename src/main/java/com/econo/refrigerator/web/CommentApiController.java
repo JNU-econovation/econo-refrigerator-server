@@ -17,12 +17,12 @@ public class CommentApiController {
     }
 
     @PutMapping("/api/comment/{commentId}/{password}")
-    public void update(@PathVariable Long commentId, @PathVariable Integer password, @RequestBody CommentDto commentDto) {
+    public void update(@PathVariable Long commentId, @PathVariable String password, @RequestBody CommentDto commentDto) {
         commentService.update(commentId, password, commentDto);
     }
 
     @DeleteMapping("/api/comment/{commentId}/{password}")
-    public void delete(@PathVariable Long commentId, @PathVariable Integer password) {
+    public void delete(@PathVariable Long commentId, @PathVariable String password) {
         commentService.delete(commentId, password);
     }
 }

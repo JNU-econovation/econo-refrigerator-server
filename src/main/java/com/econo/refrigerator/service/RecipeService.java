@@ -58,16 +58,16 @@ public class RecipeService {
         recipe.subtractIngredien(recipeIngredient);
     }
 
+    @Transactional
     public void rateLike(Long recipeId) {
-        Recipe recipe = recipeRepository.findById(recipeId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 레시피가 없습니다. id = " + recipeId));
+        Recipe recipe = read(recipeId);
 
         recipe.rateLike();
     }
 
+    @Transactional
     public void rateUnLike(Long recipeId) {
-        Recipe recipe = recipeRepository.findById(recipeId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 레시피가 없습니다. id = " + recipeId));
+        Recipe recipe = read(recipeId);
 
         recipe.rateUnLike();
     }

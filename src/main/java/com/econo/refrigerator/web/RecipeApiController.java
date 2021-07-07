@@ -55,7 +55,7 @@ public class RecipeApiController {
         recipeService.rateLike(recipeId);
     }
 
-    @PutMapping("/api/recipe/{recipeId}/like")
+    @PutMapping("/api/recipe/{recipeId}/unlike")
     public void rateUnLike(@PathVariable Long recipeId) {
         recipeService.rateUnLike(recipeId);
     }

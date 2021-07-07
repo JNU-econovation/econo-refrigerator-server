@@ -1,8 +1,18 @@
-plugins {
-	id 'org.springframework.boot' version '2.4.6-SNAPSHOT'
-	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
-	id 'java'
+buildscript {
+	ext {
+		springBootVersion = '2.1.9.RELEASE'
+	}
+	repositories {
+		mavenCentral()
+	}
+	dependencies {
+		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+	}
 }
+
+apply plugin: 'java'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
 
 group = 'com.econo'
 version = '0.0.1-SNAPSHOT'
@@ -16,25 +26,36 @@ configurations {
 
 repositories {
 	mavenCentral()
-	maven { url 'https://repo.spring.io/milestone' }
-	maven { url 'https://repo.spring.io/snapshot' }
-	maven { url "https://plugins.gradle.org/m2"} // plugin 저장소
 }
 
-apply plugin: 'io.spring.dependency-management'
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-	compileOnly 'org.projectlombok:lombok'
-	runtimeOnly 'com.h2database:h2'
-	annotationProcessor 'org.projectlombok:lombok'
+	implementation 'org.springframework.boot:spring-boot-starter-jdbc'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
-	compile("com.querydsl:querydsl-core") // querydsl
-	compile("com.querydsl:querydsl-jpa") // querydsl
+	implementation group: 'org.apache.tomcat', name: 'tomcat-jdbc'
+	implementation('org.mariadb.jdbc:mariadb-java-client')
+	compile group: 'com.h2database', name: 'h2', version: "1.4.199"
+
+	// Lombok
+	implementation 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+	testImplementation 'org.projectlombok:lombok'
+	testAnnotationProcessor 'org.projectlombok:lombok'
+
+	// QueryDSL
+	implementation("com.querydsl:querydsl-core")
+	implementation("com.querydsl:querydsl-jpa")
+	testImplementation("com.querydsl:querydsl-core")
+	testImplementation("com.querydsl:querydsl-jpa")
 	annotationProcessor "com.querydsl:querydsl-apt:${dependencyManagement.importedProperties['querydsl.version']}:jpa"
-	annotationProcessor("jakarta.persistence:jakarta.persistence-api")
-	annotationProcessor("jakarta.annotation:jakarta.annotation-api")
+	// querydsl JPAAnnotationProcessor 사용 지정
+	annotationProcessor group: 'jakarta.persistence', name: 'jakarta.persistence-api', version: '2.2.3'
+	annotationProcessor group: 'jakarta.annotation', name: 'jakarta.annotation-api', version: '1.3.5'
+
+	compile group: 'io.springfox', name: 'springfox-swagger2', version: '2.5.0'
+	compile group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.5.0'
 }
 
 def generated='src/main/generated'
@@ -48,8 +69,4 @@ tasks.withType(JavaCompile) {
 
 clean.doLast {
 	file(generated).deleteDir()
-}
-
-test {
-	useJUnitPlatform()
 }

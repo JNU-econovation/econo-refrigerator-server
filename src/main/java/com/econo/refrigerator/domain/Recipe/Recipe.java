@@ -38,7 +38,7 @@ public class Recipe {
 
     // cook method picture array
 
-    private Integer like = 0;
+    private Integer likeCount = 0;
 
     private Float averageGrade = 0.0f;
 
@@ -68,10 +68,10 @@ public class Recipe {
     }
 
     public void rateLike() {
-        like++;
+        likeCount++;
     }
 
     public void rateUnLike() {
-        like--;
+        likeCount--;
     }
 }

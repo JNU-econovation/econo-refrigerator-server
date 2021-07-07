@@ -1,28 +1,44 @@
-POST http://localhost:8080/api/recipe/create
+POST http://localhost:8080/api/recipe
 Content-Type: application/json
 
 {
   "name" : "김밥",
-  "description" : "꿀"
+  "description" : "꿀",
+  "cookingMethod" : "1.김 2.밤"
 }
 
 ###
 
-GET http://localhost:8080/api/recipe/read/1
-
-###
-
-PUT http://localhost:8080/api/recipe/update/1
-Content-Type: application/json
-
-{
-  "description" : "꿀?"
-}
-
-###
-
-GET http://localhost:8080/api/recipe/read/1
+GET http://localhost:8080/api/recipe/1
 
 ###
 
 GET http://localhost:8080/api/recipe/read/6
+
+###
+
+PUT http://localhost:8080/api/recipe/1/ingredient/0
+
+###
+
+PUT http://localhost:8080/api/recipe/1/like
+
+###
+
+PUT http://localhost:8080/api/recipe/1/like
+
+###
+
+POST http://localhost:8080/api/recipe/1/comment
+Content-Type: application/json
+
+{
+  "author" : "me",
+  "content" : "look good!",
+  "password" : "1234"
+}
+
+###
+
+GET http://localhost:8080/api/recipe/1
+
