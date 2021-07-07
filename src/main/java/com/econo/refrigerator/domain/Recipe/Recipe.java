@@ -38,7 +38,7 @@ public class Recipe {
 
     // cook method picture array
 
-    private Integer gradeCount = 0;
+    private Integer like = 0;
 
     private Float averageGrade = 0.0f;
 
@@ -67,10 +67,11 @@ public class Recipe {
         ingredients.remove(ingredient);
     }
 
-    public void calculateAverageGrade(Integer newGrade) {
-        Float sumOfGrade = averageGrade * gradeCount;
+    public void rateLike() {
+        like++;
+    }
 
-        gradeCount++;
-        averageGrade = (sumOfGrade + newGrade) / gradeCount;
+    public void rateUnLike() {
+        like--;
     }
 }

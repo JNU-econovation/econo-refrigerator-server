@@ -35,34 +35,28 @@ public class RecipeApiController {
         recipeService.delete(id);
     }
 
-    @PostMapping("/api/recipe/ingredient/{ingredient}")
-    public Long createIngredient(@PathVariable String ingredient) {
-        return recipeService.createIngredient(ingredient);
-    }
-
-    @DeleteMapping("/api/recipe/ingreident/{ingredient}")
-    public void deleteIngredient(@PathVariable String ingredient) {
-        recipeService.deleteIngredient(ingredient);
-    }
-
     @GetMapping("/api/recipe/ingredient")
     public List<RecipeIngredient> getIngredientList() {
         return recipeService.getIngredientList();
     }
 
-    @PutMapping("/api/recipe/{id}/ingredient/{ingredient}")
-    public void appendIngredient(@PathVariable Long id, @PathVariable String ingredient) {
-        recipeService.appendIngredient(id, ingredient);
+    @PutMapping("/api/recipe/{recipeId}/ingredient/{ingredientId}")
+    public void appendIngredient(@PathVariable Long recipeId, @PathVariable Integer ingredientId) {
+        recipeService.appendIngredient(recipeId, ingredientId);
     }
 
-    @DeleteMapping("/api/recipe/{id}/ingredient/{ingredient}")
-    public void subtractIngredient(@PathVariable Long id, @PathVariable String ingredient) {
-        recipeService.subtractIngredient(id, ingredient);
+    @DeleteMapping("/api/recipe/{recipeId}/ingredient/{ingredientId}")
+    public void subtractIngredient(@PathVariable Long recipeId, @PathVariable Integer ingredientId) {
+        recipeService.subtractIngredient(recipeId, ingredientId);
     }
 
-    @PutMapping("/api/recipe/{id}/grade/{grade}")
-    public Float rateGradeAndGetAverageGrade(@PathVariable Long id, @PathVariable Integer grade) {
-        return recipeService.rateGradeAndGetAverageGrade(id, grade);
+    @PutMapping("/api/recipe/{recipeId}/like")
+    public void rateLike(@PathVariable Long recipeId) {
+        recipeService.rateLike(recipeId);
     }
 
+    @PutMapping("/api/recipe/{recipeId}/like")
+    public void rateUnLike(@PathVariable Long recipeId) {
+        recipeService.rateUnLike(recipeId);
+    }
 }

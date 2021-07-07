@@ -38,45 +38,37 @@ public class RecipeService {
         recipeRepository.delete(targetRecipe);
     }
 
-    public Long createIngredient(String ingredient) {
-        return recipeIngreidentRepository.save(
-                RecipeIngredient.builder()
-                        .ingredient(Ingredient.valueOf(ingredient))
-                        .build()
-        ).getId();
-    }
-
-    public void deleteIngredient(String ingredient) {
-        recipeIngreidentRepository.delete(
-                recipeIngreidentRepository.findByIngredient(Ingredient.valueOf(ingredient))
-        );
-    }
-
     public List<RecipeIngredient> getIngredientList() {
         return recipeIngreidentRepository.findAll();
     }
 
-    public void appendIngredient(Long id, String ingredient) throws IllegalArgumentException {
-        Recipe recipe = recipeRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("해당 레시피가 없습니다. id = " + id));
-        RecipeIngredient recipeIngredient = recipeIngreidentRepository.findByIngredient(Ingredient.valueOf(ingredient));
+    public void appendIngredient(Long recipeId, Integer ingredientId) throws IllegalArgumentException {
+        Recipe recipe = recipeRepository.findById(recipeId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 레시피가 없습니다. id = " + recipeId));
+        RecipeIngredient recipeIngredient = recipeIngreidentRepository.findByIngredient(Ingredient.values()[ingredientId]);
 
         recipe.appendIngredient(recipeIngredient);
     }
 
-    public void subtractIngredient(Long id, String ingredient) throws IllegalArgumentException {
-        Recipe recipe = recipeRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("해당 레시피가 없습니다. id = " + id));
-        RecipeIngredient recipeIngredient = recipeIngreidentRepository.findByIngredient(Ingredient.valueOf(ingredient));
+    public void subtractIngredient(Long recipeId, Integer ingredientId) throws IllegalArgumentException {
+        Recipe recipe = recipeRepository.findById(recipeId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 레시피가 없습니다. id = " + recipeId));
+        RecipeIngredient recipeIngredient = recipeIngreidentRepository.findByIngredient(Ingredient.values()[ingredientId]);
 
         recipe.subtractIngredien(recipeIngredient);
     }
 
-    public Float rateGradeAndGetAverageGrade(Long id, Integer grade) {
-        Recipe recipe = recipeRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("해당 레시피가 없습니다. id = " + id));
+    public void rateLike(Long recipeId) {
+        Recipe recipe = recipeRepository.findById(recipeId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 레시피가 없습니다. id = " + recipeId));
 
-        recipe.calculateAverageGrade(grade);
-        return recipe.getAverageGrade();
+        recipe.rateLike();
+    }
+
+    public void rateUnLike(Long recipeId) {
+        Recipe recipe = recipeRepository.findById(recipeId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 레시피가 없습니다. id = " + recipeId));
+
+        recipe.rateUnLike();
     }
 }
