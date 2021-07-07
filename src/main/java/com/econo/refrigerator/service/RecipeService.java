@@ -41,8 +41,8 @@ public class RecipeService {
     public Long createIngredient(String ingredient) {
         return recipeIngreidentRepository.save(
                 RecipeIngredient.builder()
-                .ingredient(Ingredient.valueOf(ingredient))
-                .build()
+                        .ingredient(Ingredient.valueOf(ingredient))
+                        .build()
         ).getId();
     }
 

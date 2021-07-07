@@ -11,20 +11,20 @@ public class RecipeDto {
 
     private String name;
     private String description;
-    private String cookingDescription;
+    private String cookingMethod;
 
     @Builder
-    public RecipeDto(String name, String description, String cookingDescription) {
+    public RecipeDto(String name, String description, String cookingMethod) {
         this.name = name;
         this.description = description;
-        this.cookingDescription = cookingDescription;
+        this.cookingMethod = cookingMethod;
     }
 
     public Recipe toEntity() {
         return Recipe.builder()
                 .name(name)
                 .description(description)
-                .cookingDescription(cookingDescription)
+                .cookingMethod(cookingMethod)
                 .build();
     }
 }

@@ -1,6 +1,8 @@
 package com.econo.refrigerator.domain.Recipe;
 
+import com.econo.refrigerator.domain.Comment.Comment;
 import com.econo.refrigerator.web.dto.RecipeDto;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -32,7 +34,7 @@ public class Recipe {
     private List<RecipeIngredient> ingredients = new ArrayList<>();
 
     // cooking method description
-    private String cookingDescription;
+    private String cookingMethod;
 
     // cook method picture array
 
@@ -40,17 +42,21 @@ public class Recipe {
 
     private Float averageGrade = 0.0f;
 
+    @OneToMany(mappedBy = "recipe")
+    @JsonManagedReference
+    private List<Comment> comments = new ArrayList<>();
+
     @Builder
-    public Recipe(String name, String description, String cookingDescription) {
+    public Recipe(String name, String description, String cookingMethod) {
         this.name = name;
         this.description = description;
-        this.cookingDescription = cookingDescription;
+        this.cookingMethod = cookingMethod;
     }
 
     public void update(RecipeDto recipeDto) {
         this.name = recipeDto.getName();
         this.description = recipeDto.getDescription();
-        this.cookingDescription = recipeDto.getCookingDescription();
+        this.cookingMethod = recipeDto.getCookingMethod();
     }
 
     public void appendIngredient(RecipeIngredient ingredient) {
