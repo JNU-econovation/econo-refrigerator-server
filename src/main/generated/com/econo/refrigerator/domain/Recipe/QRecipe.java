@@ -20,13 +20,13 @@ public class QRecipe extends EntityPathBase<Recipe> {
 
     public static final QRecipe recipe = new QRecipe("recipe");
 
-    public final NumberPath<Float> averageGrade = createNumber("averageGrade", Float.class);
-
     public final ListPath<com.econo.refrigerator.domain.Comment.Comment, com.econo.refrigerator.domain.Comment.QComment> comments = this.<com.econo.refrigerator.domain.Comment.Comment, com.econo.refrigerator.domain.Comment.QComment>createList("comments", com.econo.refrigerator.domain.Comment.Comment.class, com.econo.refrigerator.domain.Comment.QComment.class, PathInits.DIRECT2);
 
     public final StringPath description = createString("description");
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
+
+    public final StringPath imagePath = createString("imagePath");
 
     public final ListPath<RecipeIngredient, QRecipeIngredient> ingredients = this.<RecipeIngredient, QRecipeIngredient>createList("ingredients", RecipeIngredient.class, QRecipeIngredient.class, PathInits.DIRECT2);
 

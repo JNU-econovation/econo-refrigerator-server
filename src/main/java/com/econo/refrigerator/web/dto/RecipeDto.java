@@ -16,13 +16,16 @@ public class RecipeDto {
 
     private String name;
     private String description;
+    private String imagePath;
     private List<RecipeIngredientDto> ingredients;
     private List<StepDto> steps;
 
     @Builder
-    public RecipeDto(String name, String description, List<RecipeIngredientDto> ingredients, List<StepDto> steps) {
+    public RecipeDto(String name, String description, String imagePath,
+                     List<RecipeIngredientDto> ingredients, List<StepDto> steps) {
         this.name = name;
         this.description = description;
+        this.imagePath = imagePath;
         this.ingredients = ingredients;
         this.steps = steps;
     }
@@ -31,6 +34,7 @@ public class RecipeDto {
         return Recipe.builder()
                 .name(name)
                 .description(description)
+                .imagePath(imagePath)
                 .build();
     }
 }

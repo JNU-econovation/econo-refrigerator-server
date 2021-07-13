@@ -25,6 +25,8 @@ public class Recipe {
 
     private String description;
 
+    private String imagePath;
+
     @ManyToMany
     @JoinTable(
             name = "recipe_ingredient_relation",
@@ -38,21 +40,21 @@ public class Recipe {
 
     private Integer likeCount = 0;
 
-    private Float averageGrade = 0.0f;
-
     @OneToMany(mappedBy = "recipe")
     @JsonManagedReference
     private List<Comment> comments = new ArrayList<>();
 
     @Builder
-    public Recipe(String name, String description) {
+    public Recipe(String name, String description, String imagePath) {
         this.name = name;
         this.description = description;
+        this.imagePath = imagePath;
     }
 
     public void update(RecipeDto recipeDto, List<RecipeIngredient> recipeIngredients) {
         this.name = recipeDto.getName();
         this.description = recipeDto.getDescription();
+        this.imagePath = recipeDto.getImagePath();
         this.ingredients = recipeIngredients;
     }
 
