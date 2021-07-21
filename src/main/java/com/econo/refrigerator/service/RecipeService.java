@@ -17,7 +17,7 @@ import java.util.List;
 public class RecipeService {
 
     private final RecipeRepository recipeRepository;
-    private final RecipeQueryRepository recipeQueryRepository;
+    private final RecipeSearchQueryRepository recipeSearchQueryRepository;
     private final RecipePropertyService recipePropertyService;
 
     @Transactional
@@ -42,7 +42,7 @@ public class RecipeService {
         List<RecipeIngredient> recipeIngredients =
                 recipePropertyService.convertRecipeIngredientsDtoIntoEntities(recipeIngredientsDto);
 
-        return recipeQueryRepository.searchRecipesByIngredientsOnce(recipeIngredients);
+        return recipeSearchQueryRepository.searchRecipesByIngredientsOnce(recipeIngredients);
     }
 
     @Transactional

@@ -1,7 +1,6 @@
 package com.econo.refrigerator.web;
 
 import com.econo.refrigerator.domain.Recipe.Recipe;
-import com.econo.refrigerator.domain.Recipe.RecipeQueryRepository;
 import com.econo.refrigerator.service.RecipeService;
 import com.econo.refrigerator.web.dto.RecipeDto;
 import com.econo.refrigerator.web.dto.RecipeIngredientsDto;

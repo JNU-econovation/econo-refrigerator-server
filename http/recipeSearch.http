@@ -16,6 +16,15 @@ Content-Type: application/json
 
 ###
 
+POST http://localhost:8080/api/Ingredient
+Content-Type: application/json
+
+{
+  "ingredient" : 3
+}
+
+###
+
 POST http://localhost:8080/api/recipe
 Content-Type: application/json
 
@@ -63,10 +72,26 @@ POST http://localhost:8080/api/recipe
 Content-Type: application/json
 
 {
-  "name": "김밥김밥",
+  "name": "김밥2",
   "ingredients": [
     { "ingredient": 1 },
     { "ingredient": 2 }
+  ],
+  "steps": [
+  ]
+}
+
+###
+
+POST http://localhost:8080/api/recipe
+Content-Type: application/json
+
+{
+  "name": "김밥김밥",
+  "ingredients": [
+    { "ingredient": 1 },
+    { "ingredient": 2 },
+    { "ingredient": 3 }
   ],
   "steps": [
   ]
