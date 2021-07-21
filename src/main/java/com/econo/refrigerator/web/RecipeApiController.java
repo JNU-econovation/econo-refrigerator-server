@@ -1,10 +1,14 @@
 package com.econo.refrigerator.web;
 
 import com.econo.refrigerator.domain.Recipe.Recipe;
+import com.econo.refrigerator.domain.Recipe.RecipeQueryRepository;
 import com.econo.refrigerator.service.RecipeService;
 import com.econo.refrigerator.web.dto.RecipeDto;
+import com.econo.refrigerator.web.dto.RecipeIngredientsDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 
 @RequiredArgsConstructor
@@ -41,5 +45,10 @@ public class RecipeApiController {
     @PutMapping("/api/recipe/{recipeId}/unlike")
     public void rateUnLike(@PathVariable Long recipeId) {
         recipeService.rateUnLike(recipeId);
+    }
+
+    @GetMapping("/api/recipe/search")
+    public List<Recipe> find10RecipeByIngredients(@RequestBody RecipeIngredientsDto recipeIngredientsDto) {
+        return recipeService.find10RecipeByIngredients(recipeIngredientsDto);
     }
 }

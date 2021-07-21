@@ -14,11 +14,11 @@ import java.util.List;
 @Getter
 public class RecipeDto {
 
-    private String name;
-    private String description;
-    private String imagePath;
-    private List<RecipeIngredientDto> ingredients;
-    private List<StepDto> steps;
+    public String name;
+    public String description;
+    public String imagePath;
+    public List<RecipeIngredientDto> ingredients;
+    public List<StepDto> steps;
 
     @Builder
     public RecipeDto(String name, String description, String imagePath,

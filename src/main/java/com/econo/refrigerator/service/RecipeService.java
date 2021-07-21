@@ -3,6 +3,7 @@ package com.econo.refrigerator.service;
 import com.econo.refrigerator.domain.Recipe.*;
 import com.econo.refrigerator.web.dto.RecipeDto;
 import com.econo.refrigerator.web.dto.RecipeIngredientDto;
+import com.econo.refrigerator.web.dto.RecipeIngredientsDto;
 import com.econo.refrigerator.web.dto.StepDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -10,13 +11,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
 public class RecipeService {
 
     private final RecipeRepository recipeRepository;
+    private final RecipeQueryRepository recipeQueryRepository;
     private final RecipePropertyService recipePropertyService;
 
     @Transactional
@@ -34,6 +35,14 @@ public class RecipeService {
         }
 
         return recipe.getId();
+    }
+
+    @Transactional
+    public List<Recipe> find10RecipeByIngredients(RecipeIngredientsDto recipeIngredientsDto) {
+        List<RecipeIngredient> recipeIngredients =
+                recipePropertyService.convertRecipeIngredientsDtoIntoEntities(recipeIngredientsDto);
+
+        return recipeQueryRepository.searchRecipesByIngredientsOnce(recipeIngredients);
     }
 
     @Transactional

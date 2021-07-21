@@ -2,11 +2,13 @@ package com.econo.refrigerator.service;
 
 import com.econo.refrigerator.domain.Recipe.*;
 import com.econo.refrigerator.web.dto.RecipeIngredientDto;
+import com.econo.refrigerator.web.dto.RecipeIngredientsDto;
 import com.econo.refrigerator.web.dto.StepDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -55,6 +57,16 @@ public class RecipePropertyService {
         RecipeIngredient recipeIngredient = findByIngredient(ingredient);
 
         recipe.subtractIngredient(recipeIngredient);
+    }
+
+    @Transactional
+    public List<RecipeIngredient> convertRecipeIngredientsDtoIntoEntities(RecipeIngredientsDto recipeIngredientsDto) {
+        List<RecipeIngredient> entities = new ArrayList<>();
+        for (RecipeIngredientDto dto : recipeIngredientsDto.getRecipeIngredientDtos()) {
+            entities.add(findByIngredient(dto.getIngredient()));
+        }
+
+        return entities;
     }
 
     // create & append (different with ingredient)
