@@ -56,8 +56,13 @@ public class RecipeApiController {
         recipeService.rateUnLike(recipeId);
     }
 
-    @GetMapping("/api/recipe/search")
-    public List<Recipe> find10RecipeByIngredients(@RequestBody RecipeIngredientsDto recipeIngredientsDto) {
-        return recipeService.find10RecipeByIngredients(recipeIngredientsDto);
+    @GetMapping("/api/recipe/sufficientSearch")
+    public List<Recipe> searchSufficient10RecipesByIngredient(@RequestBody RecipeIngredientsDto recipeIngredientsDto) {
+        return recipeService.searchSufficient10RecipesByIngredient(recipeIngredientsDto);
+    }
+
+    @GetMapping("/api/recipe/insufficientSearch")
+    public List<Recipe> searchInsufficient10RecipesByIngredient(@RequestBody RecipeIngredientsDto recipeIngredientsDto) {
+        return recipeService.searchInsufficient10RecipesByIngredient(recipeIngredientsDto);
     }
 }

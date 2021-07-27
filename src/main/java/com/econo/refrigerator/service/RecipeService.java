@@ -38,14 +38,6 @@ public class RecipeService {
     }
 
     @Transactional
-    public List<Recipe> find10RecipeByIngredients(RecipeIngredientsDto recipeIngredientsDto) {
-        List<RecipeIngredient> recipeIngredients =
-                recipePropertyService.convertRecipeIngredientsDtoIntoEntities(recipeIngredientsDto);
-
-        return recipeSearchQueryRepository.searchRecipesByIngredientsOnce(recipeIngredients);
-    }
-
-    @Transactional
     public Long update(Long recipeId, RecipeDto recipeDto) {
         Recipe recipe = read(recipeId);
 
@@ -125,5 +117,21 @@ public class RecipeService {
         Recipe recipe = read(recipeId);
 
         recipe.rateUnLike();
+    }
+
+    @Transactional
+    public List<Recipe> searchSufficient10RecipesByIngredient(RecipeIngredientsDto recipeIngredientsDto) {
+        List<RecipeIngredient> recipeIngredients =
+                recipePropertyService.convertRecipeIngredientsDtoIntoEntities(recipeIngredientsDto);
+
+        return recipeSearchQueryRepository.searchSufficientRecipesByIngredientsOnce(recipeIngredients);
+    }
+
+    @Transactional
+    public List<Recipe> searchInsufficient10RecipesByIngredient(RecipeIngredientsDto recipeIngredientsDto) {
+        List<RecipeIngredient> recipeIngredients =
+                recipePropertyService.convertRecipeIngredientsDtoIntoEntities(recipeIngredientsDto);
+
+        return recipeSearchQueryRepository.searchInsufficientRecipesByIngredientsOnce(recipeIngredients);
     }
 }

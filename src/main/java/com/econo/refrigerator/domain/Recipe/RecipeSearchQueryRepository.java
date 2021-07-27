@@ -27,21 +27,7 @@ public class RecipeSearchQueryRepository extends QuerydslRepositorySupport {
     }
 
     @Transactional
-    public List<Recipe> searchRecipesByIngredientsOnce(List<RecipeIngredient> targetIngredients) {
-        List<Recipe> searchResult = new ArrayList<>();
-
-        List<Recipe> searchedSufficientRecipe = searchSufficientRecipe(targetIngredients);
-        searchResult.addAll(searchedSufficientRecipe);
-        if (searchResult.size() == ONCE_SEARCH_COUNT) {
-            return searchResult;
-        }
-
-        List<Recipe> searchedInsufficientRecipe = searchInsufficientRecipe(targetIngredients, ONCE_SEARCH_COUNT - searchResult.size());
-        searchResult.addAll(searchedInsufficientRecipe);
-        return searchResult;
-    }
-
-    private List<Recipe> searchSufficientRecipe(List<RecipeIngredient> targetIngredients) {
+    public List<Recipe> searchSufficientRecipesByIngredientsOnce(List<RecipeIngredient> targetIngredients) {
         List<Recipe> searchResult = new ArrayList<>();
 
         for (int includeCount = targetIngredients.size(); includeCount > 0; includeCount--) {
@@ -57,10 +43,29 @@ public class RecipeSearchQueryRepository extends QuerydslRepositorySupport {
         return searchResult;
     }
 
-    private List<Recipe> searchInsufficientRecipe(List<RecipeIngredient> targetIngredients, int maxSearchResultCount) {
-        List<BooleanBuilder> searchCombinationBuilders = generateAllInsufficientSearchCombinationBuilders(targetIngredients);
+    @Transactional
+    public List<Recipe> searchInsufficientRecipesByIngredientsOnce(List<RecipeIngredient> targetIngredients) {
+        List<Recipe> searchResult = new ArrayList<>();
 
-        return searchRecipeByBuilderUntillUnable(searchCombinationBuilders, maxSearchResultCount);
+        for (int moreBuyCount = 1; moreBuyCount <= MORE_BUY_INGREDIENT_MAX_COUNT; moreBuyCount++) {
+            if (searchResult.size() == ONCE_SEARCH_COUNT) {
+                break;
+            }
+
+            BooleanBuilder builder = generateInsufficientSearchCombinationBuilder(targetIngredients, moreBuyCount);
+            List<Recipe> searchedInsufficientRecipe = searchRecipeByBuilder(builder, ONCE_SEARCH_COUNT - searchResult.size());
+            searchResult.addAll(searchedInsufficientRecipe);
+        }
+
+        return searchResult;
+    }
+
+    private List<Recipe> searchRecipeByBuilder(BooleanBuilder builder, int searchLimit) {
+        return queryFactory
+                .selectFrom(QRecipe.recipe)
+                .where(builder)
+                .limit(searchLimit)
+                .fetch();
     }
 
     private List<Recipe> searchRecipeByBuilderUntillUnable(List<BooleanBuilder> builders, int maxSearchResultCount) {
@@ -72,12 +77,7 @@ public class RecipeSearchQueryRepository extends QuerydslRepositorySupport {
                 break;
             }
 
-            List<Recipe> searchedRecips = queryFactory
-                    .selectFrom(QRecipe.recipe)
-                    .where(builder)
-                    .limit(maxSearchResultCount - searchResult.size())
-                    .fetch();
-            searchResult.addAll(searchedRecips);
+            searchResult.addAll(searchRecipeByBuilder(builder, maxSearchResultCount - searchResult.size()));
         }
 
         return searchResult;
@@ -113,17 +113,11 @@ public class RecipeSearchQueryRepository extends QuerydslRepositorySupport {
         }
     }
 
-    private List<BooleanBuilder> generateAllInsufficientSearchCombinationBuilders(List<RecipeIngredient> targetIngredients) {
-        List<BooleanBuilder> builders = new ArrayList<>();
+    private BooleanBuilder generateInsufficientSearchCombinationBuilder(List<RecipeIngredient> targetIngredients, int moreCount) {
+        BooleanBuilder builder = containAllIngredient(targetIngredients);
+        builder.and(eqSameIngredientSize(targetIngredients.size() + moreCount));
 
-        for (int moreBuyCount = 1; moreBuyCount <= MORE_BUY_INGREDIENT_MAX_COUNT; moreBuyCount++) {
-            BooleanBuilder builder = containAllIngredient(targetIngredients);
-            builder.and(eqSameIngredientSize(targetIngredients.size() + moreBuyCount));
-
-            builders.add(builder);
-        }
-
-        return builders;
+        return builder;
     }
 
     @Transactional
