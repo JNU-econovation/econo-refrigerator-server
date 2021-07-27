@@ -15,12 +15,12 @@ public class RecipePropertyApiController {
 
     private final RecipePropertyService recipePropertyService;
 
-    @PostMapping("/api/Ingredient")
+    @PostMapping("/api/ingredient")
     public Long createIngredient(@RequestBody RecipeIngredientDto recipeIngredientDto) {
         return recipePropertyService.createIngredient(recipeIngredientDto);
     }
 
-    @GetMapping("/api/ingredient")
+    @GetMapping("/api/ingredient/list")
     public List<RecipeIngredient> getIngredientList() {
         return recipePropertyService.getIngredientList();
     }

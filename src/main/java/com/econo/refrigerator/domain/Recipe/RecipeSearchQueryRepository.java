@@ -83,10 +83,6 @@ public class RecipeSearchQueryRepository extends QuerydslRepositorySupport {
         return searchResult;
     }
 
-    private void shuffleSearchResult(List<Recipe> recipes) {
-        Collections.shuffle(recipes);
-    }
-
     private List<BooleanBuilder> generateAllSufficientSearchCombinationBuilders(List<RecipeIngredient> targetIngredients, int includeCount) {
         List<BooleanBuilder> searchCombinationBuilders = new ArrayList<>();
 
@@ -128,6 +124,19 @@ public class RecipeSearchQueryRepository extends QuerydslRepositorySupport {
         }
 
         return builders;
+    }
+
+    @Transactional
+    public List<Recipe> get10RecipeWithOffset(Integer offset) {
+        return queryFactory
+                .selectFrom(QRecipe.recipe)
+                .offset(offset)
+                .limit(10)
+                .fetch();
+    }
+
+    private void shuffleSearchResult(List<Recipe> recipes) {
+        Collections.shuffle(recipes);
     }
 
     private BooleanExpression eqSameIngredientSize(int size) {

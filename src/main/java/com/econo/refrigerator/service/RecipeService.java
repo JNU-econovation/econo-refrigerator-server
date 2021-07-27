@@ -90,6 +90,23 @@ public class RecipeService {
                 .orElseThrow(() -> new IllegalArgumentException("해당 레시피가 없습니다. id = " + recipeId));
     }
 
+    @Transactional
+    public List<Recipe> get10RecipeWithOffset(Integer offset) {
+        return recipeSearchQueryRepository.get10RecipeWithOffset(offset);
+    }
+
+    @Transactional
+    public List<Recipe> get10RandomRecipe() {
+        long recipesCount = recipeRepository.count();
+        long maxOffset = recipesCount - 10;
+        if (maxOffset < 1) {
+            maxOffset = 0;
+        }
+
+        int randomOffset = (int) (Math.random() * maxOffset);
+        return recipeSearchQueryRepository.get10RecipeWithOffset(randomOffset);
+    }
+
     public void delete(Long recipeId) throws IllegalArgumentException {
         Recipe targetRecipe = recipeRepository.findById(recipeId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 레시피가 없습니다. id = " + recipeId));

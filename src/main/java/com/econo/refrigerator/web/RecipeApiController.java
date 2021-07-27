@@ -31,6 +31,16 @@ public class RecipeApiController {
         return recipeService.read(recipeId);
     }
 
+    @GetMapping("/api/recipe/list/{offset}")
+    public List<Recipe> get10RecipeWithOffset(@PathVariable Integer offset) {
+        return recipeService.get10RecipeWithOffset(offset);
+    }
+
+    @GetMapping("/api/recipe/randomList")
+    public List<Recipe> get10RandomRecipe() {
+        return recipeService.get10RandomRecipe();
+    }
+
     @DeleteMapping("/api/recipe/{recipeId}")
     public void delete(@PathVariable Long recipeId) {
         recipeService.delete(recipeId);
