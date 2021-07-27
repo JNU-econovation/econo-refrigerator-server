@@ -22,7 +22,7 @@ public class CommentApiController {
     }
 
     @DeleteMapping("/api/comment/{commentId}/{password}")
-    public void delete(@PathVariable Long commentId, @PathVariable String password) {
-        commentService.delete(commentId, password);
+    public Boolean delete(@PathVariable Long commentId, @PathVariable String password) {
+        return commentService.delete(commentId, password);
     }
 }

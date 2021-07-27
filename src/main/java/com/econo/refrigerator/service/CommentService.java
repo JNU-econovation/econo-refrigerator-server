@@ -35,12 +35,14 @@ public class CommentService {
         }
     }
 
-    public void delete(Long id, String password) throws IllegalArgumentException{
+    public boolean delete(Long id, String password) throws IllegalArgumentException{
         Comment comment = commentRepository.getOne(id);
         if (comment.checkPassword(password)) {
             commentRepository.delete(comment);
+            return true;
         } else {
-            throw new IllegalArgumentException("잘못된 비밀번호 입니다.");
+//            throw new IllegalArgumentException("잘못된 비밀번호 입니다.");
+            return false;
         }
     }
 }
