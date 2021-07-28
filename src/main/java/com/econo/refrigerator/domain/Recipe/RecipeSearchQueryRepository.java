@@ -18,12 +18,10 @@ public class RecipeSearchQueryRepository extends QuerydslRepositorySupport {
     private static final int MORE_BUY_INGREDIENT_MAX_COUNT = 5;
 
     private final JPAQueryFactory queryFactory;
-    private BooleanBuilder recursiveBuilder;
 
     public RecipeSearchQueryRepository(JPAQueryFactory queryFactory) {
         super(Recipe.class);
         this.queryFactory = queryFactory;
-        this.recursiveBuilder = new BooleanBuilder();
     }
 
     @Transactional
@@ -87,29 +85,36 @@ public class RecipeSearchQueryRepository extends QuerydslRepositorySupport {
         List<BooleanBuilder> searchCombinationBuilders = new ArrayList<>();
 
         for (int includeStartIdx = 0; includeStartIdx < targetIngredients.size() - includeCount + 1; includeStartIdx++) {
-            addSufficientSearchBuilderRecursively(searchCombinationBuilders, includeCount, 0, targetIngredients.subList(includeStartIdx, targetIngredients.size()));
+            BooleanBuilder builder = new BooleanBuilder();
+            builder.and(containIngredient(targetIngredients.get(includeStartIdx)));
+            addSufficientSearchBuilderRecursively(searchCombinationBuilders, builder, targetIngredients.subList(includeStartIdx + 1, targetIngredients.size()), includeCount, 1);
         }
 
         return searchCombinationBuilders;
     }
 
     private void addSufficientSearchBuilderRecursively(List<BooleanBuilder> builders,
+                                                       BooleanBuilder builder,
+                                                       List<RecipeIngredient> targetIngredients,
                                                        int includeCount,
-                                                       int includedCount,
-                                                       List<RecipeIngredient> targetIngredients) {
+                                                       int includedCount) {
         if (includedCount >= includeCount) {
-            recursiveBuilder.and(eqSameIngredientSize(includedCount));
-            builders.add(recursiveBuilder);
-            recursiveBuilder = new BooleanBuilder();
+            System.out.println(includedCount + " " + targetIngredients.size());
+
+            builder.and(eqSameIngredientSize(includedCount));
+            builders.add(builder);
 
             return;
         }
 
         for (int i = 0; i < targetIngredients.size(); i++) {
-            recursiveBuilder.and(containIngredient(targetIngredients.get(i)));
+            builder.and(containIngredient(targetIngredients.get(i)));
             includedCount++;
 
-            addSufficientSearchBuilderRecursively(builders, includeCount, includedCount, targetIngredients.subList(i + 1, targetIngredients.size()));
+            BooleanBuilder temp = new BooleanBuilder(builder);
+            addSufficientSearchBuilderRecursively(builders, builder, targetIngredients.subList(i + 1, targetIngredients.size()), includeCount, includedCount);
+            builder = new BooleanBuilder(temp);
+            includedCount--;
         }
     }
 

@@ -120,7 +120,7 @@ public class RecipeService {
     }
 
     @Transactional
-    public List<Recipe> searchSufficient10RecipesByIngredient(RecipeIngredientsDto recipeIngredientsDto) {
+    public List<Recipe> searchSufficient10RecipesByIngredients(RecipeIngredientsDto recipeIngredientsDto) {
         List<RecipeIngredient> recipeIngredients =
                 recipePropertyService.convertRecipeIngredientsDtoIntoEntities(recipeIngredientsDto);
 
