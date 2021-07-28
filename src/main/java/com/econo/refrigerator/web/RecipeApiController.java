@@ -62,10 +62,10 @@ public class RecipeApiController {
     }
 
     @GetMapping("/api/recipe/sufficientSearch")
-    public List<Recipe> searchSufficient10RecipesByIngredient(@RequestParam Map<String, Integer> param) {
+    public List<Recipe> searchSufficient10RecipesByIngredient(@RequestParam Map<String, String> param) {
         List<Integer> ingredients = param.entrySet().stream()
                 .filter(entry -> entry.getKey().equals("ingredient"))
-                .map(entry -> entry.getValue())
+                .map(entry -> Integer.parseInt(entry.getValue()))
                 .collect(Collectors.toList());
 
         return recipeService.searchSufficient10RecipesByIngredient(new RecipeIngredientsDto(ingredients));
