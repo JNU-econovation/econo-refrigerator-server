@@ -1,5 +1,6 @@
 package com.econo.refrigerator.web;
 
+import com.econo.refrigerator.domain.Recipe.Ingredient;
 import com.econo.refrigerator.domain.Recipe.Recipe;
 import com.econo.refrigerator.service.RecipeService;
 import com.econo.refrigerator.web.dto.RecipeDto;
@@ -7,7 +8,10 @@ import com.econo.refrigerator.web.dto.RecipeIngredientsDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 
 @RequiredArgsConstructor
@@ -57,8 +61,9 @@ public class RecipeApiController {
     }
 
     @GetMapping("/api/recipe/sufficientSearch")
-    public List<Recipe> searchSufficient10RecipesByIngredient(@RequestBody RecipeIngredientsDto recipeIngredientsDto) {
-        return recipeService.searchSufficient10RecipesByIngredient(recipeIngredientsDto);
+    public List<Recipe> searchSufficient10RecipesByIngredient(@RequestParam Map<String, Ingredient> param) {
+        List<Ingredient> ingredients = new ArrayList<>(param.values());
+        return recipeService.searchSufficient10RecipesByIngredient(new RecipeIngredientsDto(ingredients));
     }
 
     @GetMapping("/api/recipe/insufficientSearch")
