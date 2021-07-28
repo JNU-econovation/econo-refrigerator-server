@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 
 @RequiredArgsConstructor
@@ -61,8 +62,12 @@ public class RecipeApiController {
     }
 
     @GetMapping("/api/recipe/sufficientSearch")
-    public List<Recipe> searchSufficient10RecipesByIngredient(@RequestParam Map<String, Ingredient> param) {
-        List<Ingredient> ingredients = new ArrayList<>(param.values());
+    public List<Recipe> searchSufficient10RecipesByIngredient(@RequestParam Map<String, Integer> param) {
+        List<Integer> ingredients = param.entrySet().stream()
+                .filter(entry -> entry.getKey().equals("ingredient"))
+                .map(entry -> entry.getValue())
+                .collect(Collectors.toList());
+
         return recipeService.searchSufficient10RecipesByIngredient(new RecipeIngredientsDto(ingredients));
     }
 

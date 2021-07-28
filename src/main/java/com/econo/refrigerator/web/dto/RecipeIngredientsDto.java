@@ -1,8 +1,6 @@
 package com.econo.refrigerator.web.dto;
 
 import com.econo.refrigerator.domain.Recipe.Ingredient;
-import com.econo.refrigerator.domain.Recipe.Recipe;
-import com.econo.refrigerator.domain.Recipe.RecipeIngredient;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,11 +16,11 @@ public class RecipeIngredientsDto {
 
 
     @Builder
-    public RecipeIngredientsDto(List<Ingredient> ingredients) {
+    public RecipeIngredientsDto(List<Integer> ingredients) {
         recipeIngredientDtos = new ArrayList<>();
 
-        for (Ingredient ingredient : ingredients) {
-            recipeIngredientDtos.add(new RecipeIngredientDto(ingredient));
+        for (Integer ingredient : ingredients) {
+            recipeIngredientDtos.add(new RecipeIngredientDto(Ingredient.values()[ingredient]));
         }
     }
 }
