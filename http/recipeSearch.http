@@ -99,4 +99,8 @@ Content-Type: application/json
 
 ###
 
-GET http://localhost:8080/api/recipe/sufficientSearch?ingredients=2
+GET http://localhost:8080/api/recipe/1
+
+###
+
+GET http://localhost:8080/api/recipe/insufficientSearch?ingredients=1

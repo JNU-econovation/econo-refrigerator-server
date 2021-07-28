@@ -99,8 +99,6 @@ public class RecipeSearchQueryRepository extends QuerydslRepositorySupport {
                                                        int includeCount,
                                                        int includedCount) {
         if (includedCount >= includeCount) {
-            System.out.println(includedCount + " " + targetIngredients.size());
-
             builder.and(eqSameIngredientSize(includedCount));
             builders.add(builder);
 

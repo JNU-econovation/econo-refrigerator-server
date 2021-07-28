@@ -65,7 +65,8 @@ public class RecipeApiController {
     }
 
     @GetMapping("/api/recipe/insufficientSearch")
-    public List<Recipe> searchInsufficient10RecipesByIngredient(@RequestBody RecipeIngredientsDto recipeIngredientsDto) {
-        return recipeService.searchInsufficient10RecipesByIngredient(recipeIngredientsDto);
+    public List<Recipe> searchInsufficient10RecipesByIngredient(@RequestParam List<String> ingredients) {
+        return recipeService.searchInsufficient10RecipesByIngredient(
+                new RecipeIngredientsDto(ingredients.stream().map(ingredient -> Integer.parseInt(ingredient)).collect(Collectors.toList())));
     }
 }
