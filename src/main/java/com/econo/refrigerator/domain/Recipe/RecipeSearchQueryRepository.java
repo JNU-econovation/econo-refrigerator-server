@@ -33,8 +33,8 @@ public class RecipeSearchQueryRepository extends QuerydslRepositorySupport {
                 break;
             }
 
-            List<BooleanBuilder> searchCombinationBuilders = generateAllSufficientSearchCombinationBuilders(targetIngredients, includeCount);
-            List<Recipe> combinationSearchResult = searchRecipeByBuilderUntillUnable(searchCombinationBuilders, ONCE_SEARCH_COUNT - searchResult.size());
+            List<BooleanBuilder> searchCombinationBuilders = generateAllSearchCombinationBuilders(true, targetIngredients, includeCount);
+            List<Recipe> combinationSearchResult = searchRecipeByBuilders(searchCombinationBuilders, ONCE_SEARCH_COUNT - searchResult.size());
             searchResult.addAll(combinationSearchResult);
         }
 
@@ -45,17 +45,45 @@ public class RecipeSearchQueryRepository extends QuerydslRepositorySupport {
     public List<Recipe> searchInsufficientRecipesByIngredientsOnce(List<RecipeIngredient> targetIngredients) {
         List<Recipe> searchResult = new ArrayList<>();
 
-        for (int moreBuyCount = 1; moreBuyCount <= MORE_BUY_INGREDIENT_MAX_COUNT; moreBuyCount++) {
-            if (searchResult.size() == ONCE_SEARCH_COUNT) {
-                break;
-            }
+        for (int includeCount = targetIngredients.size(); includeCount > 0; includeCount--) {
+            List<BooleanBuilder> searchCombinationBuilders = generateAllSearchCombinationBuilders(false, targetIngredients, includeCount);
 
-            BooleanBuilder builder = generateInsufficientSearchCombinationBuilder(targetIngredients, moreBuyCount);
-            List<Recipe> searchedInsufficientRecipe = searchRecipeByBuilder(builder, ONCE_SEARCH_COUNT - searchResult.size());
-            searchResult.addAll(searchedInsufficientRecipe);
+            for (BooleanBuilder builder : searchCombinationBuilders) {
+                if (searchResult.size() == ONCE_SEARCH_COUNT) {
+                    break;
+                }
+
+                List<Recipe> searchedInsufficientRecipes = searchRecipeByBuilder(builder);
+                for (Recipe insufficientRecipe : searchedInsufficientRecipes) {
+                    int moreCount = getMoreIngredientsCount(targetIngredients, insufficientRecipe.getIngredients());
+                    if (moreCount > MORE_BUY_INGREDIENT_MAX_COUNT) {
+                        continue;
+                    }
+
+                    searchResult.add(insufficientRecipe);
+                }
+            }
         }
 
         return searchResult;
+    }
+
+    private int getMoreIngredientsCount(List<RecipeIngredient> targetIngredients, List<RecipeIngredient> searchedIngredients) {
+        int moreCount = 0;
+        for (RecipeIngredient targetIngredient : targetIngredients) {
+            if (!searchedIngredients.contains(targetIngredient)) {
+                moreCount++;
+            }
+        }
+
+        return moreCount;
+    }
+
+    private List<Recipe> searchRecipeByBuilder(BooleanBuilder builder) {
+        return queryFactory
+                .selectFrom(QRecipe.recipe)
+                .where(builder)
+                .fetch();
     }
 
     private List<Recipe> searchRecipeByBuilder(BooleanBuilder builder, int searchLimit) {
@@ -66,70 +94,59 @@ public class RecipeSearchQueryRepository extends QuerydslRepositorySupport {
                 .fetch();
     }
 
-    private List<Recipe> searchRecipeByBuilderUntillUnable(List<BooleanBuilder> builders, int maxSearchResultCount) {
+    private List<Recipe> searchRecipeByBuilders(List<BooleanBuilder> builders, int searchLimit) {
         List<Recipe> searchResult = new ArrayList<>();
 
         for (BooleanBuilder builder : builders) {
-            if (searchResult.size() == maxSearchResultCount) {
+            if (searchResult.size() == searchLimit) {
                 shuffleSearchResult(searchResult);
                 break;
             }
 
-            searchResult.addAll(searchRecipeByBuilder(builder, maxSearchResultCount - searchResult.size()));
+            searchResult.addAll(searchRecipeByBuilder(builder, searchLimit - searchResult.size()));
         }
 
         return searchResult;
     }
 
-    private List<BooleanBuilder> generateAllSufficientSearchCombinationBuilders(List<RecipeIngredient> targetIngredients, int includeCount) {
+    private List<BooleanBuilder> generateAllSearchCombinationBuilders(boolean isSufficient, List<RecipeIngredient> targetIngredients, int includeCount) {
         List<BooleanBuilder> searchCombinationBuilders = new ArrayList<>();
 
         for (int includeStartIdx = 0; includeStartIdx < targetIngredients.size() - includeCount + 1; includeStartIdx++) {
-            List<Long> test = new ArrayList<>();
-            test.add(targetIngredients.get(includeStartIdx).getId());
 
             BooleanBuilder builder = new BooleanBuilder();
             builder.and(containIngredient(targetIngredients.get(includeStartIdx)));
-            addSufficientSearchBuilderRecursively(test, searchCombinationBuilders, builder, targetIngredients.subList(includeStartIdx + 1, targetIngredients.size()), includeCount, 1);
+            addSufficientSearchBuilderRecursively(isSufficient, searchCombinationBuilders, builder, targetIngredients.subList(includeStartIdx + 1, targetIngredients.size()), includeCount, 1);
         }
 
         return searchCombinationBuilders;
     }
 
-    private void addSufficientSearchBuilderRecursively(List<Long> test,
+    private void addSufficientSearchBuilderRecursively(boolean isSufficient,
                                                        List<BooleanBuilder> builders,
                                                        BooleanBuilder builder,
                                                        List<RecipeIngredient> targetIngredients,
                                                        int includeCount,
                                                        int includedCount) {
         if (includedCount >= includeCount) {
-            System.out.println(test);
 
-            builder.and(eqSameIngredientSize(includedCount));
+            if (isSufficient) {
+                builder.and(eqSameIngredientSize(includedCount));
+            }
             builders.add(builder);
 
             return;
         }
 
         for (int i = 0; i < targetIngredients.size(); i++) {
-            List<Long> tmp = new ArrayList<>(test);
-            test.add(targetIngredients.get(i).getId());
 
             BooleanBuilder prevBuilder = new BooleanBuilder(builder);
-            builder.and(containIngredient(targetIngredients.get(i)));
 
-            addSufficientSearchBuilderRecursively(test, builders, builder, targetIngredients.subList(i + 1, targetIngredients.size()), includeCount, includedCount + 1);
+            builder.and(containIngredient(targetIngredients.get(i)));
+            addSufficientSearchBuilderRecursively(isSufficient, builders, builder, targetIngredients.subList(i + 1, targetIngredients.size()), includeCount, includedCount + 1);
 
             builder = new BooleanBuilder(prevBuilder);
-            test = new ArrayList<>(tmp);
         }
-    }
-
-    private BooleanBuilder generateInsufficientSearchCombinationBuilder(List<RecipeIngredient> targetIngredients, int moreCount) {
-        BooleanBuilder builder = containAllIngredient(targetIngredients);
-        builder.and(eqSameIngredientSize(targetIngredients.size() + moreCount));
-
-        return builder;
     }
 
     @Transactional
@@ -145,20 +162,11 @@ public class RecipeSearchQueryRepository extends QuerydslRepositorySupport {
         Collections.shuffle(recipes);
     }
 
-    private BooleanExpression eqSameIngredientSize(int size) {
-        return QRecipe.recipe.ingredients.size().eq(size);
-    }
-
     private BooleanExpression containIngredient(RecipeIngredient targetIngredient) {
         return QRecipe.recipe.ingredients.contains(targetIngredient);
     }
 
-    private BooleanBuilder containAllIngredient(List<RecipeIngredient> targetIngredients) {
-        BooleanBuilder builder = new BooleanBuilder();
-        for (RecipeIngredient targetIngredient : targetIngredients) {
-            builder.and(containIngredient(targetIngredient));
-        }
-
-        return builder;
+    private BooleanExpression eqSameIngredientSize(int size) {
+        return QRecipe.recipe.ingredients.size().eq(size);
     }
 }

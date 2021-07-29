@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @NoArgsConstructor
 @Getter
@@ -28,4 +29,17 @@ public class RecipeIngredient {
     public RecipeIngredient(Ingredient ingredient) { this.ingredient = ingredient; }
 
     public void appendRecipe(Recipe recipe) { this.recipes.add(recipe); }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        RecipeIngredient that = (RecipeIngredient) o;
+        return id.equals(that.id) && ingredient == that.ingredient;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, ingredient);
+    }
 }
