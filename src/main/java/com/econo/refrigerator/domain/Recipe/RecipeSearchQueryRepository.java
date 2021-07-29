@@ -85,20 +85,26 @@ public class RecipeSearchQueryRepository extends QuerydslRepositorySupport {
         List<BooleanBuilder> searchCombinationBuilders = new ArrayList<>();
 
         for (int includeStartIdx = 0; includeStartIdx < targetIngredients.size() - includeCount + 1; includeStartIdx++) {
+            List<Long> test = new ArrayList<>();
+            test.add(targetIngredients.get(includeStartIdx).getId());
+
             BooleanBuilder builder = new BooleanBuilder();
             builder.and(containIngredient(targetIngredients.get(includeStartIdx)));
-            addSufficientSearchBuilderRecursively(searchCombinationBuilders, builder, targetIngredients.subList(includeStartIdx + 1, targetIngredients.size()), includeCount, 1);
+            addSufficientSearchBuilderRecursively(test, searchCombinationBuilders, builder, targetIngredients.subList(includeStartIdx + 1, targetIngredients.size()), includeCount, 1);
         }
 
         return searchCombinationBuilders;
     }
 
-    private void addSufficientSearchBuilderRecursively(List<BooleanBuilder> builders,
+    private void addSufficientSearchBuilderRecursively(List<Long> test,
+                                                       List<BooleanBuilder> builders,
                                                        BooleanBuilder builder,
                                                        List<RecipeIngredient> targetIngredients,
                                                        int includeCount,
                                                        int includedCount) {
         if (includedCount >= includeCount) {
+            System.out.println(test);
+
             builder.and(eqSameIngredientSize(includedCount));
             builders.add(builder);
 
@@ -106,13 +112,16 @@ public class RecipeSearchQueryRepository extends QuerydslRepositorySupport {
         }
 
         for (int i = 0; i < targetIngredients.size(); i++) {
-            builder.and(containIngredient(targetIngredients.get(i)));
-            includedCount++;
+            List<Long> tmp = new ArrayList<>(test);
+            test.add(targetIngredients.get(i).getId());
 
-            BooleanBuilder temp = new BooleanBuilder(builder);
-            addSufficientSearchBuilderRecursively(builders, builder, targetIngredients.subList(i + 1, targetIngredients.size()), includeCount, includedCount);
-            builder = new BooleanBuilder(temp);
-            includedCount--;
+            BooleanBuilder prevBuilder = new BooleanBuilder(builder);
+            builder.and(containIngredient(targetIngredients.get(i)));
+
+            addSufficientSearchBuilderRecursively(test, builders, builder, targetIngredients.subList(i + 1, targetIngredients.size()), includeCount, includedCount + 1);
+
+            builder = new BooleanBuilder(prevBuilder);
+            test = new ArrayList<>(tmp);
         }
     }
 

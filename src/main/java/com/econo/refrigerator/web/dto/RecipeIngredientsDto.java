@@ -21,6 +21,7 @@ public class RecipeIngredientsDto {
 
         for (Integer ingredient : ingredients) {
             recipeIngredientDtos.add(new RecipeIngredientDto(Ingredient.values()[ingredient]));
+
         }
     }
 }

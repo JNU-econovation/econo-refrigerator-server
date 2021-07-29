@@ -25,6 +25,42 @@ Content-Type: application/json
 
 ###
 
+POST http://localhost:8080/api/ingredient
+Content-Type: application/json
+
+{
+  "ingredient" : 4
+}
+
+###
+
+POST http://localhost:8080/api/ingredient
+Content-Type: application/json
+
+{
+  "ingredient" : 5
+}
+
+###
+
+POST http://localhost:8080/api/ingredient
+Content-Type: application/json
+
+{
+  "ingredient" : 6
+}
+
+###
+
+POST http://localhost:8080/api/ingredient
+Content-Type: application/json
+
+{
+  "ingredient" : 7
+}
+
+###
+
 POST http://localhost:8080/api/recipe
 Content-Type: application/json
 
@@ -99,8 +135,26 @@ Content-Type: application/json
 
 ###
 
+POST http://localhost:8080/api/recipe
+Content-Type: application/json
+
+{
+  "name": "조금 긴 김밥",
+  "ingredients": [
+    { "ingredient": 1 },
+    { "ingredient": 2 },
+    { "ingredient": 3 },
+    { "ingredient": 4 },
+    { "ingredient": 5 }
+  ],
+  "steps": [
+  ]
+}
+
+###
+
 GET http://localhost:8080/api/recipe/1
 
 ###
 
-GET http://localhost:8080/api/recipe/insufficientSearch?ingredients=1
+GET http://localhost:8080/api/recipe/sufficientSearch?ingredients=1,2,3,6,4,5
