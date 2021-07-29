@@ -3,7 +3,9 @@ package com.econo.refrigerator.web.dto;
 import com.econo.refrigerator.domain.Comment.Comment;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor
 @Getter
 public class CommentDto {
 

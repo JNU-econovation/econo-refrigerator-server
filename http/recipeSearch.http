@@ -160,3 +160,7 @@ GET http://localhost:8080/api/recipe/1
 ###
 
 GET http://localhost:8080/api/recipe/insufficientSearch?ingredients=1
+
+###
+
+GET http://localhost:8080/api/recipe/list/4
