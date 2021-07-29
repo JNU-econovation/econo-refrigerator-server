@@ -139,13 +139,15 @@ POST http://localhost:8080/api/recipe
 Content-Type: application/json
 
 {
-  "name": "조금 긴 김밥",
+  "name": "긴 김밥",
   "ingredients": [
     { "ingredient": 1 },
     { "ingredient": 2 },
     { "ingredient": 3 },
     { "ingredient": 4 },
-    { "ingredient": 5 }
+    { "ingredient": 5 },
+    { "ingredient": 6 },
+    { "ingredient": 7 }
   ],
   "steps": [
   ]
@@ -157,4 +159,4 @@ GET http://localhost:8080/api/recipe/1
 
 ###
 
-GET http://localhost:8080/api/recipe/insufficientSearch?ingredients=1,2,3,6
+GET http://localhost:8080/api/recipe/insufficientSearch?ingredients=1
