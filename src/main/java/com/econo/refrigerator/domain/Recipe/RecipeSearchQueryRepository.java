@@ -55,9 +55,7 @@ public class RecipeSearchQueryRepository extends QuerydslRepositorySupport {
 
                 List<Recipe> searchedInsufficientRecipes = searchRecipeByBuilder(builder);
                 for (Recipe insufficientRecipe : searchedInsufficientRecipes) {
-                    System.out.println(insufficientRecipe.getName());
                     int moreCount = getMoreIngredientsCount(targetIngredients, insufficientRecipe.getIngredients());
-                    System.out.println(moreCount);
                     if (moreCount > MORE_BUY_INGREDIENT_MAX_COUNT) {
                         continue;
                     }
